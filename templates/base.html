@@ -7,15 +7,25 @@
     <!-- RESPONSIVE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- FULLSCREEN MODE (PWA STYLE) -->
+    <!-- PWA FULLSCREEN -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#002b55">
 
-    <!-- ICONA APP (puoi cambiarla) -->
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+    <!-- MANIFEST -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- ICONA APP -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/icon-180.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+
+    <!-- SPLASH SCREEN iOS -->
+    <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/splash-640x1136.png') }}" media="(device-width: 320px)">
+    <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/splash-750x1334.png') }}" media="(device-width: 375px)">
+    <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/splash-1125x2436.png') }}" media="(device-width: 375px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/splash-1242x2688.png') }}" media="(device-width: 414px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='icons/splash-1536x2048.png') }}" media="(min-device-width: 768px)">
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -69,7 +79,7 @@
         </div>
     </footer>
 
-    <!-- SERVICE WORKER (necessario per fullscreen installabile) -->
+    <!-- SERVICE WORKER -->
     <script>
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("/static/sw.js");
