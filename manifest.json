@@ -1,8 +1,36 @@
 {
-  "name": "Pista Sci",
-  "short_name": "Pista",
-  "display": "standalone",
+  "name": "Schilpario Nordic Arena",
+  "short_name": "Schilpario",
   "start_url": "/",
-  "background_color": "#000000",
-  "theme_color": "#000000"
+  "display": "standalone",
+  "background_color": "#002b55",
+  "theme_color": "#002b55",
+  "icons": [
+    {
+      "src": "/static/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
+
