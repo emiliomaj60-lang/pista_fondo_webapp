@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Admin — Aggiorna Stato Pista</h2>
+
+<form method="POST">
+
+    <label>Stato pista:</label>
+    <select name="stato">
+        <option value="aperta" {% if stato.stato == "aperta" %}selected{% endif %}>Aperta</option>
+        <option value="chiusa" {% if stato.stato == "chiusa" %}selected{% endif %}>Chiusa</option>
+        <option value="parziale" {% if stato.stato == "parziale" %}selected{% endif %}>Parzialmente aperta</option>
+    </select>
+
+    <label>Km disponibili:</label>
+    <input type="number" name="km" value="{{ stato.km }}" min="0">
+
+    <label>Messaggio:</label>
+    <textarea name="messaggio">{{ stato.messaggio }}</textarea>
+
+    <button type="submit">Aggiorna stato pista</button>
+
+</form>
+
+{% endblock %}

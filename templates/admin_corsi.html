@@ -1,0 +1,22 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<h2>Gestione Corsi</h2>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Titolo</th>
+        <th>Livello</th>
+        <th>Posti</th>
+    </tr>
+
+    {% for c in corsi %}
+    <tr>
+        <td>{{ c.titolo }}</td>
+        <td>{{ c.livello }}</td>
+        <td>{{ c.posti }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

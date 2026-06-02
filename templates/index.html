@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="hero" style="background-image: url('{{ url_for('static', filename='img/hero.jpg') }}');">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h2>Pista di Sci di Fondo</h2>
+        <p>Tracciati preparati, natura incontaminata, scuola sci professionale.</p>
+        <a href="{{ url_for('prenotazioni') }}" class="hero-button">Prenota una lezione</a>
+    </div>
+</div>
+
+{% set classe = "" %}
+{% if stato.stato == "aperta" %}
+    {% set classe = "stato-aperta" %}
+{% elif stato.stato == "chiusa" %}
+    {% set classe = "stato-chiusa" %}
+{% elif stato.stato == "parziale" %}
+    {% set classe = "stato-parziale" %}
+{% endif %}
+
+<div class="stato-pista {{ classe }}">
+    <strong>Stato pista:</strong>
+    {{ stato.stato|capitalize }} — {{ stato.km }} km disponibili — {{ stato.messaggio }}
+</div>
+
+<h2>Benvenuto nella nostra pista</h2>
+<p>
+    Vivi l’esperienza dello sci di fondo in un ambiente naturale curato, con tracciati preparati e una scuola sci dedicata.
+</p>
+
+<p><strong>Stato pista:</strong> da aggiornare (in futuro sarà dinamico)</p>
+
+<p>
+    <a href="{{ url_for('pista') }}" class="button-link">Info pista</a>
+    <a href="{{ url_for('scuola_sci') }}" class="button-link">Scuola Sci</a>
+    <a href="{{ url_for('prenotazioni') }}" class="button-link">Prenota una lezione</a>
+</p>
+
+<p style="margin-top:40px; font-size:0.9rem; opacity:0.7;">
+    <a href="{{ url_for('admin_login') }}">Area Amministrazione</a>
+</p>
+
+{% endblock %}

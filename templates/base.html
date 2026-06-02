@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Pista Sci di Fondo</title>
+
+    <!-- RESPONSIVE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FULLSCREEN MODE (PWA STYLE) -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#002b55">
+
+    <!-- ICONA APP (puoi cambiarla) -->
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-512.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>Pista Sci di Fondo</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('pista') }}">La Pista</a>
+            <a href="{{ url_for('scuola_sci') }}">Scuola Sci</a>
+            <a href="{{ url_for('prenotazioni') }}">Prenotazioni</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-container">
+
+            <div class="footer-section">
+                <h4>Contatti</h4>
+                <p>Pista Sci di Fondo</p>
+                <p>Località: [inserisci località]</p>
+                <p>Email: info@pistadifondo.it</p>
+                <p>Telefono: +39 000 000 0000</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Orari</h4>
+                <p>Lunedì - Venerdì: 9:00 - 17:00</p>
+                <p>Sabato - Domenica: 8:00 - 18:00</p>
+                <p>Apertura in base alle condizioni neve</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Social</h4>
+                <p><a href="#" target="_blank">Facebook</a></p>
+                <p><a href="#" target="_blank">Instagram</a></p>
+                <p><a href="#" target="_blank">TikTok</a></p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Pista Sci di Fondo — Tutti i diritti riservati (by E.Maj)</p>
+        </div>
+    </footer>
+
+    <!-- SERVICE WORKER (necessario per fullscreen installabile) -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/static/sw.js");
+        }
+    </script>
+
+</body>
+</html>
