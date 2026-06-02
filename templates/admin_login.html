@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <h2>Accesso Amministrazione</h2>
 
-<form method="POST">
-    <label>Password:</label>
-    <input type="password" name="password">
-    <button type="submit">Entra</button>
-</form>
+<form method="POST" class="admin-login-form">
 
-{% if errore %}
-<p style="color:red;">Password errata</p>
-{% endif %}
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Entra</button>
+
+    {% if errore %}
+        <p class="errore-login">Password errata</p>
+    {% endif %}
+
+</form>
 
 {% endblock %}
