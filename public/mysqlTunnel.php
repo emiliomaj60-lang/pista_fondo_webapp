@@ -1,15 +1,21 @@
 <?php
 header("Content-Type: application/json");
 
-require_once("config.php");
+// =========================
+// AES KEY (SHA256 RAW)
+// =========================
+$KEY = hash('sha256', "postgresql mariadb mysql", true);
 
-// ============================================================
+// =========================
+// AES IV (16 bytes)
+// =========================
+$IV = chr(3) . chr(1) . chr(4) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0)
+    . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0);
+
 // AES DECRYPT
-// ============================================================
 function decrypt_ws($cipherText) {
     global $KEY, $IV;
 
-    // Python invia UNA sola volta Base64
     $cipherText = base64_decode($cipherText);
 
     return openssl_decrypt(
@@ -21,9 +27,7 @@ function decrypt_ws($cipherText) {
     );
 }
 
-// ============================================================
 // AES ENCRYPT
-// ============================================================
 function encrypt_ws($plainText) {
     global $KEY, $IV;
 
@@ -38,18 +42,14 @@ function encrypt_ws($plainText) {
     return base64_encode($encrypted);
 }
 
-// ============================================================
 // READ POST (DECRYPT)
-// ============================================================
 $host      = decrypt_ws($_POST["host"]);
 $dbname    = decrypt_ws($_POST["dbname"]);
 $user      = decrypt_ws($_POST["user"]);
 $password  = decrypt_ws($_POST["password"]);
 $query     = decrypt_ws($_POST["query"]);
 
-// ============================================================
 // CONNECT TO MYSQL (USARE I PARAMETRI DECRIPTATI!)
-// ============================================================
 $conn = new mysqli($host, $user, $password, $dbname);
 
 if ($conn->connect_error) {
@@ -60,9 +60,7 @@ if ($conn->connect_error) {
     exit;
 }
 
-// ============================================================
 // EXECUTE QUERY
-// ============================================================
 $result = $conn->query($query);
 
 if (!$result) {
@@ -73,9 +71,7 @@ if (!$result) {
     exit;
 }
 
-// ============================================================
 // FORMAT RESULT
-// ============================================================
 $rows = [];
 if ($result !== true) {
     while ($row = $result->fetch_assoc()) {
