@@ -34,15 +34,15 @@ function encrypt_ws($plainText) {
     return base64_encode($encrypted);
 }
 
-// READ POST
+// READ POST (DECRYPT)
 $host      = decrypt_ws($_POST["host"]);
 $dbname    = decrypt_ws($_POST["dbname"]);
 $user      = decrypt_ws($_POST["user"]);
 $password  = decrypt_ws($_POST["password"]);
 $query     = decrypt_ws($_POST["query"]);
 
-// CONNECT TO MYSQL
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+// CONNECT TO MYSQL (USARE I PARAMETRI DECRIPTATI!)
+$conn = new mysqli($host, $user, $password, $dbname);
 
 if ($conn->connect_error) {
     echo encrypt_ws(json_encode([
