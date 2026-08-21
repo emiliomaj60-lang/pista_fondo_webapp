@@ -1,10 +1,19 @@
-<?php
+<<?php
 
-// AES KEY & IV (metti i tuoi valori reali)
-$KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";   // 32 bytes
-$IV  = "XXXXXXXXXXXXXXXX";                  // 16 bytes
+// =========================
+// AES KEY (SHA256)
+// =========================
+$KEY = hash('sha256', "postgresql mariadb mysql", true);
 
-// Database Railway
+// =========================
+// AES IV (16 bytes)
+// =========================
+$IV = chr(3) . chr(1) . chr(4) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0)
+    . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0);
+
+// =========================
+// DATABASE (Railway)
+// =========================
 define("DB_HOST", getenv("MYSQLHOST"));
 define("DB_USER", getenv("MYSQLUSER"));
 define("DB_PASS", getenv("MYSQLPASSWORD"));
