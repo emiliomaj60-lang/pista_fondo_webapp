@@ -1,11 +1,13 @@
 <?php
-// AES KEY + IV identical to StandFacile
-$KEY = hash("sha256", "postgresql mariadb mysql", true);
-$IV  = chr(3).chr(1).chr(4).str_repeat(chr(0), 13);
 
-// Railway DB credentials
-define("DB_HOST", getenv("MYSQLHOST"));
-define("DB_USER", getenv("MYSQLUSER"));
-define("DB_PASS", getenv("MYSQLPASSWORD"));
-define("DB_NAME", getenv("MYSQLDATABASE"));
+// AES KEY & IV (devono essere esattamente gli stessi usati da StandFacile)
+$KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";   // 32 bytes
+$IV  = "XXXXXXXXXXXXXXXX";                  // 16 bytes
+
+// Database credentials (NON usare localhost su Railway)
+define("DB_HOST", "XXXXXX");   // es: mysql-railway.internal
+define("DB_USER", "XXXXXX");
+define("DB_PASS", "XXXXXX");
+define("DB_NAME", "XXXXXX");
+
 ?>

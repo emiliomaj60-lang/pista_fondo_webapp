@@ -2,7 +2,12 @@
   "name": "emiliomaj60/tunnel-production",
   "description": "PHP tunnel for StandFacile",
   "type": "project",
-  "require": {},
+  "require": {
+    "ext-mysqli": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "ext-openssl": "*"
+  },
   "scripts": {
     "start": "php -S 0.0.0.0:$PORT"
   }

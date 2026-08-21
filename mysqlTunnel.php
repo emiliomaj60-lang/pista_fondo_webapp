@@ -13,14 +13,13 @@ function decrypt_ws($cipherText) {
     global $KEY, $IV;
 
     $cipherText = base64_decode($cipherText);
-    $aes = openssl_decrypt(
+    return openssl_decrypt(
         $cipherText,
         "AES-256-CBC",
         $KEY,
         OPENSSL_RAW_DATA,
         $IV
     );
-    return $aes;
 }
 
 // =========================
@@ -42,20 +41,21 @@ function encrypt_ws($plainText) {
 // =========================
 // READ POST
 // =========================
-$host      = decrypt_ws(base64_decode($_POST["host"]));
-$dbname    = decrypt_ws(base64_decode($_POST["dbname"]));
-$password  = decrypt_ws(base64_decode($_POST["password"]));
-$query     = decrypt_ws(base64_decode($_POST["query"]));
+$host      = decrypt_ws($_POST["host"]);
+$dbname    = decrypt_ws($_POST["dbname"]);
+$user      = decrypt_ws($_POST["user"]);
+$password  = decrypt_ws($_POST["password"]);
+$query     = decrypt_ws($_POST["query"]);
 
 // =========================
 // CONNECT TO MYSQL
 // =========================
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$conn = new mysqli($host, $user, $password, $dbname);
 
 if ($conn->connect_error) {
     echo encrypt_ws(json_encode([
         "errornumber" => 1,
-        "errordescr"  => "Connection failed"
+        "errordescr"  => "Connection failed: " . $conn->connect_error
     ]));
     exit;
 }
@@ -91,4 +91,3 @@ echo encrypt_ws(json_encode([
 
 $conn->close();
 ?>
- 
