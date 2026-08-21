@@ -7,4 +7,5 @@ RUN docker-php-ext-install mysqli
 COPY public/ /var/www/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 
-CMD ["php-fpm", "-F"]
+# Avvia sia php-fpm che nginx
+CMD sh -c "php-fpm -F & nginx -g 'daemon off;'"
