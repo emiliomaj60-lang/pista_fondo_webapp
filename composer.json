@@ -9,7 +9,7 @@
     "ext-openssl": "*"
   },
   "scripts": {
-    "start": "php -S 0.0.0.0:$PORT -t public"
+    "start": "cd public && php -S 0.0.0.0:$PORT"
   }
 }
 
