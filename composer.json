@@ -1,0 +1,8 @@
+{
+  "name": "tunnel-production",
+  "description": "PHP tunnel for StandFacile",
+  "require": {},
+  "scripts": {
+    "start": "php -S 0.0.0.0:$PORT"
+  }
+}
