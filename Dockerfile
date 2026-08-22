@@ -8,10 +8,7 @@ COPY public/ /var/www/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# File principale di php-fpm
-COPY php-fpm.conf /usr/local/etc/php-fpm.conf
-
-# Pool www
+# Copiamo solo il pool www
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8080
