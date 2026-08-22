@@ -5,10 +5,8 @@ RUN apt-get update && apt-get install -y nginx supervisor && rm -rf /var/lib/apt
 RUN docker-php-ext-install mysqli
 
 COPY public/ /var/www/html/
-
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 80
 
