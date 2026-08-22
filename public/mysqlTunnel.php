@@ -16,15 +16,25 @@ $IV = chr(3) . chr(1) . chr(4) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0)
 function decrypt_ws($cipherText) {
     global $KEY, $IV;
 
+    if (!isset($cipherText)) {
+        return null;
+    }
+
     $cipherText = base64_decode($cipherText);
 
-    return openssl_decrypt(
+    if ($cipherText === false) {
+        return null;
+    }
+
+    $plain = openssl_decrypt(
         $cipherText,
         "AES-256-CBC",
         $KEY,
         OPENSSL_RAW_DATA,
         $IV
     );
+
+    return $plain;
 }
 
 // AES ENCRYPT
@@ -42,15 +52,31 @@ function encrypt_ws($plainText) {
     return base64_encode($encrypted);
 }
 
+// =========================
 // READ POST (DECRYPT)
-$host      = decrypt_ws($_POST["host"]);
-$dbname    = decrypt_ws($_POST["dbname"]);
-$user      = decrypt_ws($_POST["user"]);
-$password  = decrypt_ws($_POST["password"]);
-$query     = decrypt_ws($_POST["query"]);
+// =========================
+$host     = decrypt_ws($_POST["host"] ?? null);
+$port     = decrypt_ws($_POST["port"] ?? null);
+$dbname   = decrypt_ws($_POST["dbname"] ?? null);
+$user     = decrypt_ws($_POST["user"] ?? null);
+$password = decrypt_ws($_POST["password"] ?? null);
+$query    = decrypt_ws($_POST["query"] ?? null);
 
-// CONNECT TO MYSQL (USARE I PARAMETRI DECRIPTATI!)
-$conn = new mysqli($host, $user, $password, $dbname);
+// =========================
+// VALIDATION
+// =========================
+if (!$host || !$port || !$dbname || !$user || !$password || !$query) {
+    echo encrypt_ws(json_encode([
+        "errornumber" => 99,
+        "errordescr"  => "Invalid or missing parameters"
+    ]));
+    exit;
+}
+
+// =========================
+// CONNECT TO MYSQL
+// =========================
+$conn = new mysqli($host, $user, $password, $dbname, intval($port));
 
 if ($conn->connect_error) {
     echo encrypt_ws(json_encode([
@@ -60,7 +86,9 @@ if ($conn->connect_error) {
     exit;
 }
 
+// =========================
 // EXECUTE QUERY
+// =========================
 $result = $conn->query($query);
 
 if (!$result) {
@@ -71,7 +99,9 @@ if (!$result) {
     exit;
 }
 
+// =========================
 // FORMAT RESULT
+// =========================
 $rows = [];
 if ($result !== true) {
     while ($row = $result->fetch_assoc()) {
