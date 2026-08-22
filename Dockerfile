@@ -8,9 +8,6 @@ COPY public/ /var/www/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Copiamo solo il pool www
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
-
 EXPOSE 8080
 
 CMD ["supervisord", "-n"]
