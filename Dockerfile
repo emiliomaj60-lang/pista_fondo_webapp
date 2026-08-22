@@ -7,8 +7,11 @@ RUN docker-php-ext-install mysqli
 COPY public/ /var/www/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php-fpm.conf /usr/local/etc/php-fpm.conf
+
+# ⚠️ Questo è il punto CRITICO: php-fpm legge il pool da php-fpm.d/www.conf
+COPY php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 
 EXPOSE 8080
 
 CMD ["supervisord", "-n"]
+
