@@ -1,5 +1,6 @@
 <?php
-header("Content-Type: application/json");
+// NIENTE header JSON: StandFacile si aspetta solo testo criptato
+// header("Content-Type: application/json");
 
 // =========================
 // AES KEY (SHA256 RAW)
@@ -12,17 +13,17 @@ $KEY = hash('sha256', "postgresql mariadb mysql", true);
 $IV = chr(3) . chr(1) . chr(4) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0)
     . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0);
 
-// AES DECRYPT
-function decrypt_ws($cipherText) {
+// AES DECRYPT (compatibile con Encrypt_WS + Base64Encode)
+function decrypt_ws($cipherTextBase64) {
     global $KEY, $IV;
 
-    if (!isset($cipherText)) return null;
+    if (!isset($cipherTextBase64)) return null;
 
-    $cipherText = base64_decode($cipherText);
-    if ($cipherText === false) return null;
+    $cipherRaw = base64_decode($cipherTextBase64);
+    if ($cipherRaw === false) return null;
 
     return openssl_decrypt(
-        $cipherText,
+        $cipherRaw,
         "AES-256-CBC",
         $KEY,
         OPENSSL_RAW_DATA,
@@ -30,11 +31,11 @@ function decrypt_ws($cipherText) {
     );
 }
 
-// AES ENCRYPT
+// AES ENCRYPT (compatibile con Decrypt_WS lato C#)
 function encrypt_ws($plainText) {
     global $KEY, $IV;
 
-    $encrypted = openssl_encrypt(
+    $encryptedRaw = openssl_encrypt(
         $plainText,
         "AES-256-CBC",
         $KEY,
@@ -42,42 +43,49 @@ function encrypt_ws($plainText) {
         $IV
     );
 
-    return base64_encode($encrypted);
+    return base64_encode($encryptedRaw);
 }
 
 // =========================
-// READ POST (DECRYPT)
+// LEGGI PARAMETRI (GET, come rdbCheckConnection)
 // =========================
-$dbname   = decrypt_ws($_POST["dbname"] ?? null);
-$password = decrypt_ws($_POST["password"] ?? null);
-$query    = decrypt_ws($_POST["query"] ?? null);
+$hostEnc    = $_GET["host"]     ?? null;
+$dbnameEnc  = $_GET["dbname"]   ?? null;
+$passwordEnc= $_GET["password"] ?? null;
+$queryEnc   = $_GET["query"]    ?? null;
+
+// decrypt: prima Base64, poi AES
+$host     = decrypt_ws($hostEnc);
+$dbname   = decrypt_ws($dbnameEnc);
+$password = decrypt_ws($passwordEnc);
+$query    = decrypt_ws($queryEnc);
 
 // =========================
-// VALIDATION
+// VALIDAZIONE
 // =========================
 if (!$dbname || !$password || !$query) {
-    echo encrypt_ws(json_encode([
+    $resp = [
         "errornumber" => 99,
         "errordescr"  => "Invalid or missing parameters"
-    ]));
+    ];
+    echo encrypt_ws(json_encode($resp));
     exit;
 }
 
 // =========================
-// CONNECT TO MYSQL (Railway)
+/* CONNECT TO MYSQL (Railway) */
 // =========================
-
-// ⚠️ Host e porta del tuo Railway MySQL
 $DB_HOST = "altaria.proxy.rlwy.net";
 $DB_PORT = 40984;
 
 $conn = new mysqli($DB_HOST, "root", $password, $dbname, $DB_PORT);
 
 if ($conn->connect_error) {
-    echo encrypt_ws(json_encode([
+    $resp = [
         "errornumber" => 1,
         "errordescr"  => "Connection failed: " . $conn->connect_error
-    ]));
+    ];
+    echo encrypt_ws(json_encode($resp));
     exit;
 }
 
@@ -87,15 +95,16 @@ if ($conn->connect_error) {
 $result = $conn->query($query);
 
 if (!$result) {
-    echo encrypt_ws(json_encode([
+    $resp = [
         "errornumber" => 2,
         "errordescr"  => $conn->error
-    ]));
+    ];
+    echo encrypt_ws(json_encode($resp));
     exit;
 }
 
 // =========================
-// FORMAT RESULT (StandFacile format)
+// FORMAT RESULT (StandFacile-style)
 // =========================
 $rows = [];
 
@@ -105,11 +114,16 @@ if ($result !== true) {
     }
 }
 
-echo encrypt_ws(json_encode([
+// ⚠️ QUI METTIAMO ANCHE LA STRINGA "NO_DB_ERRORS"
+// perché rdbCheckConnection fa solo text.Contains("NO_DB_ERRORS")
+$resp = [
     "errornumber" => 0,
-    "errordescr"  => "",
+    "errordescr"  => "NO_DB_ERRORS",
     "rows"        => $rows
-]));
+];
+
+echo encrypt_ws(json_encode($resp));
 
 $conn->close();
 ?>
+
