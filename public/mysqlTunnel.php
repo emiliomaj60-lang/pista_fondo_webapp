@@ -79,4 +79,3 @@ echo encrypt_ws("NO_DB_ERRORS");
 
 $conn->close();
 ?>
-
