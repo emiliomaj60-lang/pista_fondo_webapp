@@ -16,25 +16,18 @@ $IV = chr(3) . chr(1) . chr(4) . chr(0) . chr(0) . chr(0) . chr(0) . chr(0)
 function decrypt_ws($cipherText) {
     global $KEY, $IV;
 
-    if (!isset($cipherText)) {
-        return null;
-    }
+    if (!isset($cipherText)) return null;
 
     $cipherText = base64_decode($cipherText);
+    if ($cipherText === false) return null;
 
-    if ($cipherText === false) {
-        return null;
-    }
-
-    $plain = openssl_decrypt(
+    return openssl_decrypt(
         $cipherText,
         "AES-256-CBC",
         $KEY,
         OPENSSL_RAW_DATA,
         $IV
     );
-
-    return $plain;
 }
 
 // AES ENCRYPT
@@ -55,17 +48,14 @@ function encrypt_ws($plainText) {
 // =========================
 // READ POST (DECRYPT)
 // =========================
-$host     = decrypt_ws($_POST["host"] ?? null);
-$port     = decrypt_ws($_POST["port"] ?? null);
 $dbname   = decrypt_ws($_POST["dbname"] ?? null);
-$user     = decrypt_ws($_POST["user"] ?? null);
 $password = decrypt_ws($_POST["password"] ?? null);
 $query    = decrypt_ws($_POST["query"] ?? null);
 
 // =========================
 // VALIDATION
 // =========================
-if (!$host || !$port || !$dbname || !$user || !$password || !$query) {
+if (!$dbname || !$password || !$query) {
     echo encrypt_ws(json_encode([
         "errornumber" => 99,
         "errordescr"  => "Invalid or missing parameters"
@@ -74,9 +64,13 @@ if (!$host || !$port || !$dbname || !$user || !$password || !$query) {
 }
 
 // =========================
-// CONNECT TO MYSQL
+// CONNECT TO MYSQL (Railway)
 // =========================
-$conn = new mysqli($host, $user, $password, $dbname, intval($port));
+
+// ⚠️ SOSTITUISCI QUESTO VALORE CON IL TUO DB HOST DI RAILWAY
+$DB_HOST = "containers-us-west-123.railway.app";
+
+$conn = new mysqli($DB_HOST, "root", $password, $dbname);
 
 if ($conn->connect_error) {
     echo encrypt_ws(json_encode([
@@ -100,11 +94,12 @@ if (!$result) {
 }
 
 // =========================
-// FORMAT RESULT
+// FORMAT RESULT (StandFacile format)
 // =========================
 $rows = [];
+
 if ($result !== true) {
-    while ($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_row()) {
         $rows[] = $row;
     }
 }
