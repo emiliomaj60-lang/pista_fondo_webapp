@@ -67,10 +67,11 @@ if (!$dbname || !$password || !$query) {
 // CONNECT TO MYSQL (Railway)
 // =========================
 
-// ⚠️ SOSTITUISCI QUESTO VALORE CON IL TUO DB HOST DI RAILWAY
-$DB_HOST = "containers-us-west-123.railway.app";
+// ⚠️ Host e porta del tuo Railway MySQL
+$DB_HOST = "altaria.proxy.rlwy.net";
+$DB_PORT = 40984;
 
-$conn = new mysqli($DB_HOST, "root", $password, $dbname);
+$conn = new mysqli($DB_HOST, "root", $password, $dbname, $DB_PORT);
 
 if ($conn->connect_error) {
     echo encrypt_ws(json_encode([
